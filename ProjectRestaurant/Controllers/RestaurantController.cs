@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ProjectRestaurant.Controllers.Inputs;
-using ProjectRestaurant.Domains.Entities;
-using ProjectRestaurant.Helpers;
 using ProjectRestaurant.Interfaces;
 
 namespace ProjectRestaurant.Controllers

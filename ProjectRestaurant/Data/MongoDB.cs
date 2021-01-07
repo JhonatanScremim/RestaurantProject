@@ -22,7 +22,7 @@ namespace ProjectRestaurant.Data
             {
                 var settings = MongoClientSettings.FromUrl(new MongoUrl(configuration["ConnectionString"]));
                 var client = new MongoClient(settings);
-                database = client.GetDatabase(configuration["NomeBanco"]);
+                database = client.GetDatabase(configuration["DataBase"]);
                 MapClasses();
             }
             catch(Exception e)
