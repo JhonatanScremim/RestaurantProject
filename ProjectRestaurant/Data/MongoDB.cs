@@ -38,7 +38,7 @@ namespace ProjectRestaurant.Data
                 BsonClassMap.RegisterClassMap<RestaurantSchema>(i =>
                 {
                     i.AutoMap();
-                    i.MapIdMember(x => x.RestaurantId);
+                    i.MapIdMember(x => x.Id);
                     i.MapMember(x => x.Kitchen).SetSerializer(new EnumSerializer<Kitchen>(BsonType.Int32));
                     i.SetIgnoreExtraElements(true);
                 });

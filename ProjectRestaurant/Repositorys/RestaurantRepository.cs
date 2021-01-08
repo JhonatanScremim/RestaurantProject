@@ -40,7 +40,7 @@ namespace ProjectRestaurant.Repositorys
         {
             var document = new RestaurantSchema
             {
-                RestaurantName = restaurant.RestaurantName,
+                Name = restaurant.RestaurantName,
                 Kitchen = restaurant.Kitchen,
                 Address = new AddressSchema
                 {
