@@ -54,5 +54,19 @@ namespace ProjectRestaurant.Repositorys
 
             _restaurant.InsertOne(document);
         }
+
+        public async Task<IEnumerable<Restaurant>> GetAll()
+        {
+            var listRestaurants = new List<Restaurant>();
+
+            await _restaurant.AsQueryable().ForEachAsync(d =>
+            {
+                var restaurant = new Restaurant(d.Id.ToString(), d.Name, d.Kitchen);
+                var address = new Address(d.Address.Street, d.Address.Number, d.Address.City, d.Address.UF, d.Address.Cep);
+                restaurant.AddAddress(address);
+                listRestaurants.Add(restaurant);
+            });
+            return listRestaurants;
+        }
     }
 }

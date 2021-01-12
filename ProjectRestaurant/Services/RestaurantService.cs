@@ -25,5 +25,9 @@ namespace ProjectRestaurant.Services
             var result = _repository.PostRestaurant(restaurant, kitchen);
             return result;
         }
+        public Task<IEnumerable<Restaurant>> GetAll()
+        {
+            return _repository.GetAll();
+        }
     }
 }

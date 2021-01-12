@@ -10,5 +10,6 @@ namespace ProjectRestaurant.Interfaces
     public interface IRestaurantService
     {
         Restaurant PostRestaurant(RestaurantInput restaurant);
+        Task<IEnumerable<Restaurant>> GetAll();
     }
 }
