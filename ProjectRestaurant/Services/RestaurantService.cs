@@ -1,4 +1,5 @@
 ﻿using ProjectRestaurant.Controllers.Inputs;
+using ProjectRestaurant.Data.Schemas;
 using ProjectRestaurant.Domains.Entities;
 using ProjectRestaurant.Helpers;
 using ProjectRestaurant.Interfaces;
@@ -28,6 +29,15 @@ namespace ProjectRestaurant.Services
         public Task<IEnumerable<Restaurant>> GetAll()
         {
             return _repository.GetAll();
+        }
+
+        public Restaurant GetById(string id)
+        {
+            var result = _repository.GetById(id);
+            if (result == null)
+                return null;
+
+            return result.ConvertToDomain();
         }
     }
 }

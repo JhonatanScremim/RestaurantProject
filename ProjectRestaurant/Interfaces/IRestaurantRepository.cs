@@ -1,4 +1,5 @@
 ﻿using ProjectRestaurant.Controllers.Inputs;
+using ProjectRestaurant.Data.Schemas;
 using ProjectRestaurant.Domains.Entities;
 using ProjectRestaurant.Domains.Enums;
 using System;
@@ -12,5 +13,6 @@ namespace ProjectRestaurant.Interfaces
     {
         Restaurant PostRestaurant(RestaurantInput restaurant, Kitchen kitchen);
         Task<IEnumerable<Restaurant>> GetAll();
+        RestaurantSchema GetById(string id);
     }
 }

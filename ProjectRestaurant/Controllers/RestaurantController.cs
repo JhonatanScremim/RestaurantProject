@@ -4,6 +4,7 @@ using ProjectRestaurant.Domains.Entities;
 using ProjectRestaurant.Domains.Enums;
 using ProjectRestaurant.Interfaces;
 using ProjectRestaurant.OutPuts;
+using ProjectRestaurant.ViewModel;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -43,6 +44,34 @@ namespace ProjectRestaurant.Controllers
                 City = x.Address.City});
 
             return Ok(list);
+        }
+
+
+        [HttpGet]
+        [Route("api/v1/restaurant/{id}")]
+        public ActionResult GetById(string id)
+        {
+            var restaurant = _service.GetById(id);
+
+            if (restaurant == null)
+                return null;
+
+            var model = new RestaurantViewModel
+            {
+                Id = restaurant.RestaurantId,
+                Name = restaurant.RestaurantName,
+                Kitchen = (int)restaurant.Kitchen,
+                Address = new AddressViewModel
+                {
+                    Street = restaurant.Address.Street,
+                    Number = restaurant.Address.Number,
+                    City = restaurant.Address.City,
+                    UF = restaurant.Address.UF,
+                    Cep = restaurant.Address.Cep
+                }
+            };
+
+            return Ok(model);
         }
     }
 }

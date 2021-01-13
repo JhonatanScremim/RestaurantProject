@@ -11,5 +11,6 @@ namespace ProjectRestaurant.Interfaces
     {
         Restaurant PostRestaurant(RestaurantInput restaurant);
         Task<IEnumerable<Restaurant>> GetAll();
+        Restaurant GetById(string id);
     }
 }

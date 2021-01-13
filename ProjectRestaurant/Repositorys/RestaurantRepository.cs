@@ -68,5 +68,10 @@ namespace ProjectRestaurant.Repositorys
             });
             return listRestaurants;
         }
+
+        public RestaurantSchema GetById(string id)
+        {
+            return _restaurant.AsQueryable().FirstOrDefault(x => x.Id == id);
+        }
     }
 }
