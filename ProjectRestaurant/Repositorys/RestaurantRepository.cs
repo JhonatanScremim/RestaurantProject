@@ -22,6 +22,24 @@ namespace ProjectRestaurant.Repositorys
             _restaurant = mongoDB.database.GetCollection<RestaurantSchema>("Restaurant");
         }
 
+        public async Task<IEnumerable<Restaurant>> GetAll()
+        {
+            var listRestaurants = new List<Restaurant>();
+
+            await _restaurant.AsQueryable().ForEachAsync(d =>
+            {
+                var restaurant = new Restaurant(d.Id.ToString(), d.Name, d.Kitchen);
+                var address = new Address(d.Address.Street, d.Address.Number, d.Address.City, d.Address.UF, d.Address.Cep);
+                restaurant.AddAddress(address);
+                listRestaurants.Add(restaurant);
+            });
+            return listRestaurants;
+        }
+
+        public RestaurantSchema GetById(string id)
+        {
+            return _restaurant.AsQueryable().FirstOrDefault(x => x.Id == id);
+        }
         public Restaurant PostRestaurant(RestaurantInput restaurant, Kitchen kitchen)
         {
             var newRestaurant = new Restaurant(restaurant.RestaurantName, kitchen);
@@ -33,7 +51,7 @@ namespace ProjectRestaurant.Repositorys
                 restaurant.Cep);
             newRestaurant.AddAddress(address);
             InsertRestaurant(newRestaurant);
-            return newRestaurant; 
+            return newRestaurant;
         }
 
         public void InsertRestaurant(Restaurant restaurant)
@@ -55,23 +73,44 @@ namespace ProjectRestaurant.Repositorys
             _restaurant.InsertOne(document);
         }
 
-        public async Task<IEnumerable<Restaurant>> GetAll()
+        public bool PutRestaurant(Restaurant restaurant)
         {
-            var listRestaurants = new List<Restaurant>();
-
-            await _restaurant.AsQueryable().ForEachAsync(d =>
+            var document = new RestaurantSchema
             {
-                var restaurant = new Restaurant(d.Id.ToString(), d.Name, d.Kitchen);
-                var address = new Address(d.Address.Street, d.Address.Number, d.Address.City, d.Address.UF, d.Address.Cep);
-                restaurant.AddAddress(address);
-                listRestaurants.Add(restaurant);
-            });
-            return listRestaurants;
+                Id = restaurant.RestaurantId,
+                Name = restaurant.RestaurantName,
+                Kitchen = restaurant.Kitchen,
+                Address = new AddressSchema
+                {
+                    Street = restaurant.Address.Street,
+                    Number = restaurant.Address.Number,
+                    City = restaurant.Address.City,
+                    UF = restaurant.Address.UF,
+                    Cep = restaurant.Address.Cep
+                }
+            };
+
+            var result = _restaurant.ReplaceOne(x => x.Id == document.Id, document);
+
+            return result.ModifiedCount > 0;
         }
 
-        public RestaurantSchema GetById(string id)
+        public bool UpdateKitchen(string id, Kitchen kitchen)
         {
-            return _restaurant.AsQueryable().FirstOrDefault(x => x.Id == id);
+            var update = Builders<RestaurantSchema>.Update.Set(x => x.Kitchen, kitchen);
+
+            var result = _restaurant.UpdateOne(x => x.Id == id, update);
+
+            return result.ModifiedCount > 0;
+        }
+
+        public bool UpdateName(string id, string name)
+        {
+            var update = Builders<RestaurantSchema>.Update.Set(x => x.Name, name);
+
+            var result = _restaurant.UpdateOne(x => x.Id == id, update);
+
+            return result.ModifiedCount > 0;
         }
     }
 }

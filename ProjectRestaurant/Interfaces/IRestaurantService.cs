@@ -9,8 +9,10 @@ namespace ProjectRestaurant.Interfaces
 {
     public interface IRestaurantService
     {
-        Restaurant PostRestaurant(RestaurantInput restaurant);
         Task<IEnumerable<Restaurant>> GetAll();
         Restaurant GetById(string id);
+        Restaurant PostRestaurant(RestaurantInput restaurant);
+        bool PutRestaurant(PutRestaurantInput body);
+        bool UpdateKitchen(string id, int kitchen);
     }
 }

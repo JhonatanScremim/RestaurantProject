@@ -1,6 +1,7 @@
 ﻿using ProjectRestaurant.Controllers.Inputs;
 using ProjectRestaurant.Data.Schemas;
 using ProjectRestaurant.Domains.Entities;
+using ProjectRestaurant.Domains.ValueObjects;
 using ProjectRestaurant.Helpers;
 using ProjectRestaurant.Interfaces;
 using System;
@@ -38,6 +39,48 @@ namespace ProjectRestaurant.Services
                 return null;
 
             return result.ConvertToDomain();
+        }
+
+        public bool PutRestaurant(PutRestaurantInput body)
+        {
+            var restaurant = _repository.GetById(body.RestaurantId);
+
+            if (restaurant == null)
+                return false;
+
+            var kitchen = KitchenHelper.ConvertToInteger(body.Kitchen);
+
+            var newRestaurant = new Restaurant(body.RestaurantId, body.RestaurantName, kitchen);
+            var address = new Address(
+                body.Street,
+                body.Number,
+                body.City,
+                body.UF,
+                body.Cep);
+
+            newRestaurant.AddAddress(address);
+            if (!newRestaurant.Validation())
+                return false;
+
+            if (!_repository.PutRestaurant(newRestaurant))
+                return false;
+
+            return true;
+        }
+
+        public bool UpdateKitchen(string id, int kitchen)
+        {
+            var restaurant = _repository.GetById(id);
+
+            if (restaurant == null)
+                return false;
+
+            var newKitchen = KitchenHelper.ConvertToInteger(kitchen);
+
+            if (!_repository.UpdateKitchen(id, newKitchen))
+                return false;
+
+            return true;
         }
     }
 }

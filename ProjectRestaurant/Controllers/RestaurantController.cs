@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 namespace ProjectRestaurant.Controllers
 {
     [ApiController]
+    [Route("api/v1")]
     public class RestaurantController : ControllerBase
     {
         private readonly IRestaurantService _service;
@@ -19,20 +20,8 @@ namespace ProjectRestaurant.Controllers
             _service = service;
         }
 
-        [HttpPost]
-        [Route("api/v1/restaurant")]
-        public ActionResult PostRestaurant([FromBody] RestaurantInput body)
-        {
-            var restaurant = _service.PostRestaurant(body);
-
-            if (!restaurant.Validation())
-                return BadRequest("Ocorreu um erro");
-
-            return Ok(restaurant);
-        }
-
         [HttpGet]
-        [Route("api/v1/restaurant")]
+        [Route("restaurant")]
         public async Task<ActionResult> GetAll()
         {
             var listRestaurants = await _service.GetAll();
@@ -48,7 +37,7 @@ namespace ProjectRestaurant.Controllers
 
 
         [HttpGet]
-        [Route("api/v1/restaurant/{id}")]
+        [Route("restaurant/{id}")]
         public ActionResult GetById(string id)
         {
             var restaurant = _service.GetById(id);
@@ -72,6 +61,42 @@ namespace ProjectRestaurant.Controllers
             };
 
             return Ok(model);
+        }
+
+        [HttpPost]
+        [Route("restaurant")]
+        public ActionResult PostRestaurant([FromBody] RestaurantInput body)
+        {
+            var restaurant = _service.PostRestaurant(body);
+
+            if (!restaurant.Validation())
+                return BadRequest("Ocorreu um erro");
+
+            return Ok(restaurant);
+        }
+
+        [HttpPut]
+        [Route("restaurant")]
+        public ActionResult PutRestaurant([FromBody] PutRestaurantInput body)
+        {
+            var result = _service.PutRestaurant(body);
+
+            if (!result)
+                return BadRequest("Nenhum restaurante foi alterado, revise seus parametros");
+
+            return Ok("Restaurante alterado com sucesso !!");
+        }
+
+        [HttpPatch]
+        [Route("restaurant/{id}")]
+        public ActionResult PatchRestaurantKitchen(string id,[FromBody] PutRestaurantInput body)
+        {
+            var result = _service.UpdateKitchen(id, body.Kitchen);
+
+            if (!result)
+                return BadRequest("Não foi possivel alterar o restaurante, revise seus pensamentos");
+
+            return Ok("Restaurante alterado com sucesso !!");
         }
     }
 }

@@ -11,8 +11,11 @@ namespace ProjectRestaurant.Interfaces
 {
     public interface IRestaurantRepository
     {
-        Restaurant PostRestaurant(RestaurantInput restaurant, Kitchen kitchen);
         Task<IEnumerable<Restaurant>> GetAll();
         RestaurantSchema GetById(string id);
+        Restaurant PostRestaurant(RestaurantInput restaurant, Kitchen kitchen);
+        bool PutRestaurant(Restaurant restaurant);
+        bool UpdateKitchen(string id, Kitchen kitchen);
+        bool UpdateName(string id, string name);
     }
 }
