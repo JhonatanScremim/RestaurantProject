@@ -21,7 +21,7 @@ namespace ProjectRestaurant.Controllers
         }
 
         [HttpGet]
-        [Route("restaurant")]
+        [Route("restaurant/all")]
         public async Task<ActionResult> GetAll()
         {
             var listRestaurants = await _service.GetAll();
@@ -43,7 +43,7 @@ namespace ProjectRestaurant.Controllers
             var restaurant = _service.GetById(id);
 
             if (restaurant == null)
-                return null;
+                return BadRequest("Ocorreu um erro");
 
             var model = new RestaurantViewModel
             {
@@ -61,6 +61,34 @@ namespace ProjectRestaurant.Controllers
             };
 
             return Ok(model);
+        }
+
+        [HttpGet]
+        [Route("restaurant")]
+        public IActionResult GetByName([FromQuery] string name)
+        {
+            var restaurant = _service.GetByName(name);
+
+            if(restaurant == null)
+                return BadRequest("Ocorreu um erro");
+
+            var model = restaurant.Select(x => new RestaurantViewModel
+            {
+                Id = x.RestaurantId,
+                Name = x.RestaurantName,
+                Kitchen = (int)x.Kitchen,
+                Address = new AddressViewModel
+                {
+                    Street = x.Address.Street,
+                    Number = x.Address.Number,
+                    City = x.Address.City,
+                    UF = x.Address.UF,
+                    Cep = x.Address.Cep
+                }
+            });
+
+            return Ok(model);
+
         }
 
         [HttpPost]

@@ -1,4 +1,5 @@
-﻿using MongoDB.Driver;
+﻿using MongoDB.Bson;
+using MongoDB.Driver;
 using ProjectRestaurant.Controllers.Inputs;
 using ProjectRestaurant.Data;
 using ProjectRestaurant.Data.Schemas;
@@ -39,6 +40,26 @@ namespace ProjectRestaurant.Repositorys
         public RestaurantSchema GetById(string id)
         {
             return _restaurant.AsQueryable().FirstOrDefault(x => x.Id == id);
+        }
+        public IEnumerable<Restaurant> GetByName(string name)
+        {
+            var restaurant = new List<Restaurant>();
+
+            _restaurant.AsQueryable()
+                .Where(x => x.Name.ToLower().Contains(name.ToLower()))
+                .ToList()
+                .ForEach(x => restaurant.Add(x.ConvertToDomain()));
+
+            //Uma maneira de fazer usando REGEX:
+
+            //var filter = new BsonDocument { { "Name", new BsonDocument { { "$regex", name }, { "$options", "i" } } } };
+
+            //_restaurant.Find(filter)
+            //    .ToList()
+            //    .ForEach(x => restaurant.Add(x.ConvertToDomain()));
+
+
+            return restaurant;
         }
         public Restaurant PostRestaurant(RestaurantInput restaurant, Kitchen kitchen)
         {

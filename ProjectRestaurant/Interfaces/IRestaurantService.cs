@@ -11,6 +11,7 @@ namespace ProjectRestaurant.Interfaces
     {
         Task<IEnumerable<Restaurant>> GetAll();
         Restaurant GetById(string id);
+        IEnumerable<Restaurant> GetByName(string name);
         Restaurant PostRestaurant(RestaurantInput restaurant);
         bool PutRestaurant(PutRestaurantInput body);
         bool UpdateKitchen(string id, int kitchen);

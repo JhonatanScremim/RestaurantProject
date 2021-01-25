@@ -41,6 +41,14 @@ namespace ProjectRestaurant.Services
             return result.ConvertToDomain();
         }
 
+        public IEnumerable<Restaurant> GetByName(string name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+                return null;
+
+            return _repository.GetByName(name);
+        }
+
         public bool PutRestaurant(PutRestaurantInput body)
         {
             var restaurant = _repository.GetById(body.RestaurantId);
